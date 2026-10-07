@@ -1,0 +1,64 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - '**'
+
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: 1.4.2
+
+      - name: Install dependencies
+        run: bun install --frozen-lockfile
+
+      - name: Lint
+        run: bun run lint
+
+      - name: Test
+        run: bun run test
+
+      - name: Compile contract
+        run: bun run --filter contract compile
+
+      - name: Verify contract is committed
+        run: git diff --exit-code -- contract/openapi.yaml
+
+      - name: Generate frontend contract artifacts
+        run: bun run --filter frontend codegen
+
+      - name: Verify frontend contract artifacts are committed
+        run: git diff --exit-code -- apps/frontend/src/api/schema.ts apps/frontend/src/api/sdk.ts
+
+      - name: Generate backend contract artifacts
+        run: bun run --filter backend codegen
+
+      - name: Verify backend contract artifacts are committed
+        run: git diff --exit-code -- apps/backend/src/api/schema.ts apps/backend/src/api/schemas.ts
+
+      - name: Typecheck backend
+        run: bun run --filter backend typecheck
+
+  e2e:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: 1.4.2
+
+      - name: Install dependencies
+        run: bun install --frozen-lockfile
+
+      - name: Install Playwright Chromium
+        run: bunx playwright install --with-deps chromium
+
+      - name: E2E
+        run: bun run test:e2e
