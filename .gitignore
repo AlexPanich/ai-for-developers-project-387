@@ -7,3 +7,6 @@ tsp-output/
 .playwright/
 test-results/
 playwright-report/
+
+# Локальные заметки: план фич/багов для практики с агентами, в репозиторий не идёт
+PLAN.md
