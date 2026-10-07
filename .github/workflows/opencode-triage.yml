@@ -7,6 +7,8 @@ on:
 jobs:
     triage:
         runs-on: ubuntu-latest
+        # Триаж не должен крутиться дольше 15 минут: расследование — не имплементация
+        timeout-minutes: 15
         permissions:
             id-token: write
             contents: write
@@ -35,10 +37,22 @@ jobs:
               if: steps.check.outputs.result == 'true'
               env:
                   OPENCODE_API_KEY: ${{ secrets.OPENCODE_API_KEY }}
+                  # gh CLI в шелле агента: ставить метки triage может только он
+                  GH_TOKEN: ${{ github.token }}
               with:
                   model: opencode/mimo-v2.6-flash-free
                   prompt: |
-                      Review this issue. If there's a clear fix or relevant docs:
-                      - Provide documentation links
-                      - Add error handling guidance for code examples
-                      Otherwise, do not comment.
+                      Triage this issue. Do not modify code and do not push anything.
+
+                      1. Investigate first: read AGENTS.md, SPEC.md and the relevant
+                         code before judging. Reference SPEC sections by number.
+                      2. Apply exactly one label with the gh CLI:
+                             gh issue edit <issue-number> --add-label <label>
+                         Vocabulary is in docs/agents/triage-labels.md:
+                             ready-for-agent  clear bug/feature, obvious fix path
+                             needs-info       cannot act without reporter details
+                             needs-triage     vague scope or needs a maintainer decision
+                             ready-for-human  should be implemented by a person
+                      3. Post one short comment: what you found, which label you
+                         applied and why. Link to SPEC/ADR/code lines you relied on.
+                      If nothing is actionable, still apply needs-triage — silence is not triage.
