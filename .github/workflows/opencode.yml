@@ -8,12 +8,19 @@ on:
 
 jobs:
     opencode:
+        # Две команды (/oc, /opencode) — те же, что по умолчанию слушает ашкшон
+        # в `mentions`. Плюс фильтр автора: в публичном репозитории /oc может
+        # написать кто угодно, а каждый вызов жжёт токены модели.
         if: |
-            contains(github.event.comment.body, ' /oc') ||
-            startsWith(github.event.comment.body, '/oc') ||
-            contains(github.event.comment.body, ' /opencode') ||
-            startsWith(github.event.comment.body, '/opencode')
+            (
+                contains(github.event.comment.body, ' /oc') ||
+                startsWith(github.event.comment.body, '/oc') ||
+                contains(github.event.comment.body, ' /opencode') ||
+                startsWith(github.event.comment.body, '/opencode')
+            ) && contains(fromJSON('["OWNER","MEMBER","COLLABORATOR"]'), github.event.comment.author_association)
         runs-on: ubuntu-latest
+        # Застрявший агент не должен крутиться до 6 часов лимита раннера
+        timeout-minutes: 15
         permissions:
             id-token: write
             contents: read
