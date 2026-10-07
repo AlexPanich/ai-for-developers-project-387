@@ -1,0 +1,9 @@
+node_modules/
+dist/
+tsp-output/
+*.db
+*.log
+.DS_Store
+.playwright/
+test-results/
+playwright-report/

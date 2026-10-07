@@ -1,0 +1,299 @@
+openapi: 3.0.0
+info:
+  title: Календарь звонков API
+  version: 0.0.0
+tags: []
+paths:
+  /api/bookings:
+    post:
+      operationId: Bookings_create
+      parameters: []
+      responses:
+        '201':
+          description: The request has succeeded and a new resource has been created as a result.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Booking'
+        '400':
+          description: The server could not understand the request due to invalid syntax.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorBody'
+        '404':
+          description: The server cannot find the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorBody'
+        '409':
+          description: The request conflicts with the current state of the server.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorBody'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BookingCreate'
+    get:
+      operationId: Bookings_list
+      parameters: []
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BookingList'
+  /api/event-types:
+    get:
+      operationId: EventTypes_list
+      parameters: []
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EventTypeList'
+    post:
+      operationId: EventTypes_create
+      parameters:
+        - name: X-Admin-Password
+          in: header
+          required: true
+          schema:
+            type: string
+      responses:
+        '201':
+          description: The request has succeeded and a new resource has been created as a result.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EventType'
+        '400':
+          description: The server could not understand the request due to invalid syntax.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorBody'
+        '401':
+          description: Access is unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorBody'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EventTypeCreate'
+  /api/event-types/{id}:
+    get:
+      operationId: EventTypes_get
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EventType'
+        '404':
+          description: The server cannot find the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorBody'
+  /api/event-types/{id}/availability:
+    get:
+      operationId: EventTypes_availability
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Availability'
+        '404':
+          description: The server cannot find the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorBody'
+components:
+  schemas:
+    Availability:
+      type: object
+      required:
+        - slots
+      properties:
+        slots:
+          type: array
+          items:
+            $ref: '#/components/schemas/Slot'
+    Booking:
+      type: object
+      required:
+        - id
+        - eventTypeId
+        - startAt
+        - guestName
+        - guestEmail
+      properties:
+        id:
+          type: string
+          format: uuid
+        eventTypeId:
+          type: string
+          format: uuid
+        startAt:
+          type: string
+          format: date-time
+        guestName:
+          type: string
+        guestEmail:
+          type: string
+          format: email
+    BookingCreate:
+      type: object
+      required:
+        - eventTypeId
+        - startAt
+        - guestName
+        - guestEmail
+      properties:
+        eventTypeId:
+          type: string
+          format: uuid
+        startAt:
+          type: string
+          format: date-time
+        guestName:
+          type: string
+        guestEmail:
+          type: string
+          format: email
+    BookingList:
+      type: object
+      required:
+        - bookings
+      properties:
+        bookings:
+          type: array
+          items:
+            $ref: '#/components/schemas/BookingListItem'
+    BookingListItem:
+      type: object
+      required:
+        - eventType
+        - startAt
+      properties:
+        eventType:
+          $ref: '#/components/schemas/EventTypeRef'
+        startAt:
+          type: string
+          format: date-time
+    ErrorBody:
+      type: object
+      required:
+        - error
+      properties:
+        error:
+          type: object
+          properties:
+            code:
+              type: string
+              enum:
+                - VALIDATION_ERROR
+                - INVALID_ADMIN_PASSWORD
+                - EVENT_TYPE_NOT_FOUND
+                - SLOT_TAKEN
+            message:
+              type: string
+          required:
+            - code
+            - message
+    EventType:
+      type: object
+      required:
+        - id
+        - name
+        - description
+        - durationMinutes
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        description:
+          type: string
+        durationMinutes:
+          type: integer
+          format: int32
+          minimum: 1
+          maximum: 540
+    EventTypeCreate:
+      type: object
+      required:
+        - name
+        - description
+        - durationMinutes
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+        durationMinutes:
+          type: integer
+          format: int32
+          minimum: 1
+          maximum: 540
+    EventTypeList:
+      type: object
+      required:
+        - eventTypes
+      properties:
+        eventTypes:
+          type: array
+          items:
+            $ref: '#/components/schemas/EventType'
+    EventTypeRef:
+      type: object
+      required:
+        - id
+        - name
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+    Slot:
+      type: object
+      required:
+        - startAt
+        - available
+      properties:
+        startAt:
+          type: string
+          format: date-time
+        available:
+          type: boolean

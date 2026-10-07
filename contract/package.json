@@ -1,0 +1,13 @@
+{
+  "name": "contract",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "compile": "tsp compile ."
+  },
+  "dependencies": {
+    "@typespec/compiler": "1.16.0",
+    "@typespec/http": "1.16.0",
+    "@typespec/openapi3": "1.16.0"
+  }
+}

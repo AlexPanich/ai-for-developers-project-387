@@ -1,0 +1,30 @@
+{
+  "$schema": "../../node_modules/@biomejs/biome/configuration_schema.json",
+  "extends": "//",
+  "files": {
+    "includes": [
+      "**",
+      "!**/dist",
+      "!**/dist-ssr",
+      "!**/build",
+      "!**/coverage",
+      "!src/api/schema.ts",
+      "!src/api/sdk.ts"
+    ]
+  },
+  "linter": {
+    "includes": ["**", "!public/**"]
+  },
+  "javascript": {
+    "jsxRuntime": "transparent",
+    "formatter": {
+      "quoteStyle": "single",
+      "jsxQuoteStyle": "double"
+    }
+  },
+  "css": {
+    "formatter": {
+      "enabled": true
+    }
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "$schema": "../../node_modules/@biomejs/biome/configuration_schema.json",
+  "extends": "//",
+  "files": {
+    "includes": [
+      "**",
+      "!**/dist",
+      "!**/build",
+      "!**/coverage",
+      "!src/api/schema.ts",
+      "!src/api/schemas.ts"
+    ]
+  },
+  "javascript": {
+    "globals": ["Bun", "process"]
+  }
+}

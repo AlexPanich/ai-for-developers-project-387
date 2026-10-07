@@ -1,0 +1,26 @@
+{
+  "name": "my-monorepo",
+  "version": "0.4.0",
+  "private": true,
+  "workspaces": [
+    "apps/*",
+    "contract"
+  ],
+  "scripts": {
+    "dev:frontend": "bun --filter frontend dev",
+    "dev:backend": "bun --filter backend dev",
+    "dev": "bun --filter \"*\" dev",
+    "build": "bun --filter \"*\" build",
+    "lint": "biome check",
+    "lint:fix": "biome check --write",
+    "format": "biome format --write",
+    "test": "bun --filter \"*\" test",
+    "test:frontend": "bun --filter frontend test",
+    "test:backend": "bun --filter backend test",
+    "test:e2e": "playwright test"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "2.5.15",
+    "@playwright/test": "^1.63.0"
+  }
+}
