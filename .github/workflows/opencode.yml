@@ -37,4 +37,6 @@ jobs:
               env:
                   OPENCODE_API_KEY: ${{ secrets.OPENCODE_API_KEY }} # имя секрета зависит от провайдера в model
               with:
-                  model: opencode/MiMo-V2.6-Flash Free
+                  # ID модели, а не её отображаемое имя: opencode github run
+                  # принимает вида provider/model-id, иначе Model not found
+                  model: opencode/mimo-v2.6-flash-free
