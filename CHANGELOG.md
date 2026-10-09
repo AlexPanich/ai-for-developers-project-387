@@ -1,5 +1,18 @@
 # Changelog
 
+## [0.5.0](https://github.com/AlexPanich/ai-for-developers-project-387/compare/v0.4.0...v0.5.0) (2026-10-09)
+
+
+### Features
+
+* перенести приложение «Календарь звонков» из предыдущего репозитория ([c99364d](https://github.com/AlexPanich/ai-for-developers-project-387/commit/c99364d28da3d9e892475faa99228acdcf7b7a85))
+
+
+### Bug Fixes
+
+* **frontend:** подписать московское время на /events ([1649e8f](https://github.com/AlexPanich/ai-for-developers-project-387/commit/1649e8fd02b489168c1c853d0c7e8d75c6465bdf)), closes [#3](https://github.com/AlexPanich/ai-for-developers-project-387/issues/3)
+* **frontend:** увеличить шрифт подписи «Время по Москве» ([ed5b360](https://github.com/AlexPanich/ai-for-developers-project-387/commit/ed5b3604c0c2ff66a62fcc74123a0f16cafb13f2))
+
 ## [0.4.0](https://github.com/AlexPanich/ai-for-developers-project-386/compare/v0.3.0...v0.4.0) (2026-10-06)
 
 
