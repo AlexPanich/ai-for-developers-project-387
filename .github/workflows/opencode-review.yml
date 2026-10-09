@@ -5,8 +5,12 @@ on:
 jobs:
     opencode-review:
         # Включаем проверку так, чтобы бот реагировал на код человека.
-        # PR от bot-аккаунтов пропускаем.
-        if: ${{ !endsWith(github.event.pull_request.user.login, '[bot]') }}
+        # PR от bot-аккаунтов пропускаем. В публичном репозитории cut
+        # расходы: ревьюим только PR своих (OWNER/MEMBER/COLLABORATOR),
+        # а не посторонних — иначе кто угодно сжигает токены модели.
+        if: |
+            !endsWith(github.event.pull_request.user.login, '[bot]')
+            && contains(fromJSON('["OWNER","MEMBER","COLLABORATOR"]'), github.event.pull_request.author_association)
         runs-on: ubuntu-latest
         permissions:
             id-token: write # Нужен для аутентификации через GitHub Actions
