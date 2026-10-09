@@ -38,7 +38,7 @@ export function EventsPage() {
       <main className="mx-auto max-w-6xl px-6 py-12">
         <h1 className="text-3xl font-semibold tracking-tight">Предстоящие встречи</h1>
         {/* §6: время списка московское, подпись снимает сравнение с локальным календарём */}
-        <p className="mt-2 text-sm text-muted-foreground">Время по Москве</p>
+        <p className="mt-2 text-base text-muted-foreground">Время по Москве</p>
 
         {state.status === 'loading' ? (
           <p role="status" className="mt-6 text-muted-foreground">
