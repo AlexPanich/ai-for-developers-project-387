@@ -38,6 +38,8 @@ jobs:
               env:
                   OPENCODE_API_KEY: ${{ secrets.OPENCODE_API_KEY }} # имя секрета зависит от провайдера в model
               with:
+                  # Сессии приватные: share отключён осознанно (см. README)
+                  share: false
                   # ID модели, а не её отображаемое имя: opencode github run
                   # принимает вида provider/model-id, иначе Model not found
                   model: opencode/mimo-v2.6-flash-free

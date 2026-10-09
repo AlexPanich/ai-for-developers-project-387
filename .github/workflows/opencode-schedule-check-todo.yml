@@ -20,6 +20,7 @@ jobs:
               env:
                   OPENCODE_API_KEY: ${{ secrets.OPENCODE_API_KEY }} # имя секрета зависит от провайдера в model
               with:
+                  share: false
                   model: opencode/mimo-v2.6-flash-free
                   prompt: |
                       Review the codebase for TODO, FIXME, and HACK comments.

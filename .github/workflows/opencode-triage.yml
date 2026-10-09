@@ -42,6 +42,7 @@ jobs:
                   # gh CLI в шелле агента: ставить метки triage может только он
                   GH_TOKEN: ${{ github.token }}
               with:
+                  share: false
                   model: opencode/mimo-v2.6-flash-free
                   prompt: |
                       Triage this issue. Do not modify code and do not push anything.

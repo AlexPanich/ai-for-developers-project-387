@@ -30,5 +30,6 @@ jobs:
               env:
                   OPENCODE_API_KEY: ${{ secrets.OPENCODE_API_KEY }} # имя секрета зависит от провайдера в model
               with:
+                  share: false
                   model: ${{ inputs.model }}
                   prompt: ${{ inputs.prompt }}

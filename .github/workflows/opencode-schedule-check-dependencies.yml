@@ -29,6 +29,7 @@ jobs:
                   # gh CLI в шелле агента: без GH_TOKEN `gh issue`/`gh label` не пройдут авторизацию
                   GH_TOKEN: ${{ github.token }}
               with:
+                  share: false
                   model: ${{ inputs.model || 'opencode/mimo-v2.6-flash-free' }}
                   prompt: |
                       Ты — автоматический аудитор зависимостей этого монорепозитория (Bun, workspaces: apps/*, contract и корень).
