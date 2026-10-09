@@ -6,6 +6,8 @@ on:
 
 jobs:
     triage:
+        # Issue от ботов (dependabot, github-actions, собственные агенты репо) не триажим
+        if: ${{ !endsWith(github.event.issue.user.login, '[bot]') }}
         runs-on: ubuntu-latest
         # Триаж не должен крутиться дольше 15 минут: расследование — не имплементация
         timeout-minutes: 15
