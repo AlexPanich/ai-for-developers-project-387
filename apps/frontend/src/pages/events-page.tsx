@@ -37,6 +37,8 @@ export function EventsPage() {
       <SiteHeader />
       <main className="mx-auto max-w-6xl px-6 py-12">
         <h1 className="text-3xl font-semibold tracking-tight">Предстоящие встречи</h1>
+        {/* §6: время списка московское, подпись снимает сравнение с локальным календарём */}
+        <p className="mt-2 text-base text-muted-foreground">Время по Москве</p>
 
         {state.status === 'loading' ? (
           <p role="status" className="mt-6 text-muted-foreground">
@@ -81,5 +83,7 @@ export function EventsPage() {
 /** Время встречи по Москве: «7 октября 2026 · 10:00» (§6: тип + время). */
 function meetingLabel(startAt: string): string {
   const startMs = Date.parse(startAt)
+  // Контракт обещает offsetDateTime, но рендер не должен рисовать «NaN:NaN»
+  if (Number.isNaN(startMs)) return 'Время не указано'
   return `${mskDateLabel(mskDayKey(startMs))} · ${mskTime(startMs)}`
 }

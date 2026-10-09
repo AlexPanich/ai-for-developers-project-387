@@ -77,3 +77,28 @@ test('§6: пусто — «Нет предстоящих встреч»', async
   expect(await screen.findByText('Нет предстоящих встреч')).toBeInTheDocument()
   expect(screen.queryByRole('listitem')).not.toBeInTheDocument()
 })
+
+test('§6: список подписан «Время по Москве» — время не сравнивают с локальным календарём', async () => {
+  mockListBookings(jsonResponse(200, BOOKINGS))
+  renderEvents()
+
+  expect(await screen.findByText('Время по Москве')).toBeInTheDocument()
+})
+
+test('§6: не-дата в `startAt` не даёт «NaN:NaN» в строке встречи', async () => {
+  mockListBookings(
+    jsonResponse(200, {
+      bookings: [
+        {
+          eventType: { id: '3f1d4f8a-1b7c-4f1e-9f3a-0b1c2d3e4f56', name: 'Созвон' },
+          startAt: 'not-a-date',
+        },
+      ],
+    }),
+  )
+  renderEvents()
+
+  const item = await screen.findByRole('listitem')
+  expect(item).toHaveTextContent('Время не указано')
+  expect(item).not.toHaveTextContent('NaN')
+})
