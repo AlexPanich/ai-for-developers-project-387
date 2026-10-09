@@ -1,0 +1,64 @@
+name: Weekly Code Audit
+on:
+    schedule:
+        - cron: "0 9 * * 1" # Every Monday at 9am UTC
+jobs:
+    opencode:
+        runs-on: ubuntu-latest
+        permissions:
+            id-token: write
+            contents: write
+            pull-requests: write
+            issues: write
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@v6
+              with:
+                  persist-credentials: false
+            - name: Run OpenCode
+              uses: anomalyco/opencode/github@latest
+              env:
+                  OPENCODE_API_KEY: ${{ secrets.OPENCODE_API_KEY }} # имя секрета зависит от провайдера в model
+              with:
+                  model: opencode/mimo-v2.6-flash-free
+                  prompt: |
+                      Ты — автоматический аудитор зависимостей этого монорепозитория (Bun, workspaces: apps/*, contract и корень).
+                      Задача: проверить зависимости на известные уязвимости и на новые (устаревшие) версии и, если нужны обновления, завести GitHub Issue с описанием того, что и как нужно обновить. Править код, package.json, bun.lock и другие файлы нельзя — только анализ и Issue.
+
+                      Выполни шаги строго по порядку:
+
+                      1. Установи зависимости по lockfile, ничего не меняя: `bun install --frozen-lockfile`.
+
+                      2. Найди уязвимости: `bun audit --json`. Разбери JSON-вывод. Для каждого advisory зафиксируй: имя пакета, affected range (уязвимые версии), severity (low/moderate/high/critical), идентификатор advisory (GHSA-...), исправленная версия (patched/fixed) и рекомендуемое действие.
+
+                      3. Найди устаревшие пакеты: `bun outdated`. Разбери таблицу вывода: для каждого пакета — имя, флаг типа (dev/prod), текущая версия (Current) и последняя (Latest), а также определение, к какому workspace относится (смотри в package.json директорию, где он объявлен).
+
+                      4. Сформируй сводку.
+                         - Уязвимости: список с приоритетом по severity (critical → high → moderate → low).
+                         - Устаревшие версии: список «текущая → latest».
+                         Если уязвимостей нет И устаревших пакетов нет — НЕ создавай issue и НЕ комментируй, заверши работу.
+
+                      5. Определи дату запуска: `date +%F` (формат YYYY-MM-DD).
+
+                      6. Проверь, есть ли уже открытый issue с лейблом `dependencies`:
+                         `gh issue list --state open --label dependencies --json number,title --jq '.[] | .number'`.
+                         Если команда создания issue с `--label dependencies` упадёт из-за отсутствия лейбла, сначала создай его: `gh label create dependencies --color 0366d6 --description "Устаревшие или уязвимые зависимости"`.
+
+                      Затем действуй одним из способов:
+
+                      A) Если открытого issue с лейблом `dependencies` НЕТ — создай один GitHub Issue:
+                         `gh issue create --label dependencies --title "deps: обновить зависимости (<дата запуска>)" --body "<markdown>"`
+                         Тело issue (markdown):
+                         - Вводная строка: что это еженедельная проверка зависимостей от <дата>.
+                         - Секция «Уязвимости» — таблица: Пакет | Severity | Advisory (GHSA) | Уязвимые версии | Исправлено в. Если уязвимостей нет, так и написать.
+                         - Секция «Устаревшие зависимости» — таблица: Workspace | Пакет | Текущая | Последняя. Если нет — написать, что всё актуально.
+                         - Секция «Как исправить» — конкретные команды: `bun audit fix` (или `bun audit fix --latest` для верхних границ) для уязвимостей; `bun update <package>` (или `bun update --latest`) для версий; напомнить закоммитить обновлённый `bun.lock`.
+                         Не забудь, что после любых правок зависимостей нужно закоммитить `bun.lock` (в CI стоит `--frozen-lockfile`).
+
+                      B) Если открытый issue с лейблом `dependencies` УЖЕ есть — не создавай дубликат: добавь туда комментарий `gh issue comment <number> --body "<markdown>"` с сегодняшней сводкой (та же структура тела, что выше), и только если сводка изменилась (появились новые уязвимости или новые устаревшие пакеты) либо повторяется нетривиальная проблема, требующая внимания.
+
+                      Важно:
+                      - Работай только через `gh` CLI и `bun`; не коммить, не пуши, не открывай PR.
+                      - Не меняй ни один файл репозитория.
+                      - Не прерывайся на нерелевантные вопросы; если команда требует подтверждения — используй неинтерактивные флаги (`gh` работает без промптов).
+                  

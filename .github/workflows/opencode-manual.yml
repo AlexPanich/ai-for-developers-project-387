@@ -1,0 +1,34 @@
+name: Manual OpenCode Task
+on:
+    workflow_dispatch:
+        inputs:
+            prompt:
+                description: "Task for OpenCode"
+                required: true
+                type: string
+            model:
+                description: "Model to use"
+                required: false
+                default: "opencode/mimo-v2.6-flash-free"
+                type: string
+jobs:
+    opencode:
+        runs-on: ubuntu-latest
+        timeout-minutes: 30
+        permissions:
+            id-token: write
+            contents: write
+            pull-requests: write
+            issues: write
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@v6
+              with:
+                  persist-credentials: false
+            - name: Run OpenCode
+              uses: anomalyco/opencode/github@latest
+              env:
+                  OPENCODE_API_KEY: ${{ secrets.OPENCODE_API_KEY }} # имя секрета зависит от провайдера в model
+              with:
+                  model: ${{ inputs.model }}
+                  prompt: ${{ inputs.prompt }}
