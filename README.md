@@ -138,6 +138,22 @@ apps/
 bun run lint && bun run test
 ```
 
+## Воркфлоу GitHub Actions
+
+| Воркфлоу | Файл | Событие | Модель | Назначение | Прогоны |
+|---|---|---|---|---|---|
+| CI | `ci.yml` | `push` (все ветки) | — | линтер, тесты, перегенерация контракта и типов/схем API, typecheck бэкенда, E2E | Actions → **CI** |
+| hexlet-check | `hexlet-check.yml` | `push` (все ветки и теги) | — | автотесты Хекслета (генерируется, не редактировать) | Actions → **hexlet-check** |
+| release-please | `release-please.yml` | `push` в `master` | — | release-PR, версия, `CHANGELOG.md`, теги | Actions → **release-please** |
+| OpenCode PR Review | `opencode-review.yml` | `pull_request` (`opened`, `synchronize`, `reopened`, `ready_for_review`; не от бота) | `opencode/mimo-v2.6-flash-free` | ревью PR агентом | Actions → **OpenCode PR Review** |
+| opencode | `opencode.yml` | `issue_comment` / `pull_request_review_comment` (`/oc`, `/opencode`; автор-мейнтейнер; не от бота) | `opencode/mimo-v2.6-flash-free` | задача агенту прямо из комментария | Actions → **opencode** |
+| Issue Triage | `opencode-triage.yml` | `issues` (`opened`; не от бота; аккаунт старше 30 дней) | `opencode/mimo-v2.6-flash-free` | триаж нового issue: метка + комментарий | Actions → **Issue Triage** |
+| Manual OpenCode Task | `opencode-manual.yml` | `workflow_dispatch` (вручную) | на выбор, по умолчанию `opencode/mimo-v2.6-flash-free` | произвольная задача агенту | Actions → **Manual OpenCode Task** → Run workflow |
+| Weekly Dependency Audit | `opencode-schedule-check-dependencies.yml` | `schedule` (пн 09:00 UTC) + `workflow_dispatch` | на выбор, по умолчанию `opencode/mimo-v2.6-flash-free` | аудит уязвимостей и устаревших зависимостей → issue | Actions → **Weekly Dependency Audit** |
+| Weekly TODO Audit | `opencode-schedule-check-todo.yml` | `schedule` (вт 09:00 UTC) | `opencode/mimo-v2.6-flash-free` | поиск `TODO`/`FIXME`/`HACK` → issue | Actions → **Weekly TODO Audit** |
+
+Прогоны смотрят на вкладке **Actions**: список слева фильтруется по имени воркфлоу; для ручных — кнопка **Run workflow** внутри самого воркфлоу.
+
 ## Коммиты и релизы
 
 - Сообщения коммитов — по спецификации

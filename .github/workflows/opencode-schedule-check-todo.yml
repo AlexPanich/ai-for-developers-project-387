@@ -1,4 +1,4 @@
-name: Weekly Code Audit
+name: Weekly TODO Audit
 on:
     schedule:
         - cron: "0 9 * * 2" # Every Tuesday at 9am UTC
