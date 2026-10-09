@@ -21,12 +21,12 @@
 
 ## Стек
 
-| Слой | Технологии |
-|---|---|
-| Бекенд | Bun, TypeScript, [Elysia](https://elysiajs.com) |
-| Фронтенд | React 19, TypeScript, [Vite](https://vite.dev) |
+| Слой          | Технологии                                                  |
+| ------------- | ----------------------------------------------------------- |
+| Бекенд        | Bun, TypeScript, [Elysia](https://elysiajs.com)             |
+| Фронтенд      | React 19, TypeScript, [Vite](https://vite.dev)              |
 | Качество кода | [Biome](https://biomejs.dev) (линтер + форматтер), Bun Test |
-| Автоматизация | GitHub Actions, release-please |
+| Автоматизация | GitHub Actions, release-please                              |
 
 ## Установка
 
@@ -68,16 +68,16 @@ docker run --rm -p 8080:8080 -e PORT=8080 calendar-slot
 
 ## Команды
 
-| Команда | Что делает |
-|---|---|
-| `bun run lint` | Проверка линтером и форматированием (Biome) |
-| `bun run lint:fix` | Автоисправление замечаний линтера |
-| `bun run format` | Форматирование кода |
-| `bun run test` | Тесты бекенда и фронтенда |
-| `bun run test:backend` | Только тесты бекенда |
-| `bun run test:frontend` | Только тесты фронтенда |
-| `bun run build` | Сборка: для фронтенда `tsc -b` (проверка типов) и `vite build` |
-| `bun run --filter frontend codegen` | Генерация типов API фронтенда из `contract/openapi.yaml` |
+| Команда                             | Что делает                                                     |
+| ----------------------------------- | -------------------------------------------------------------- |
+| `bun run lint`                      | Проверка линтером и форматированием (Biome)                    |
+| `bun run lint:fix`                  | Автоисправление замечаний линтера                              |
+| `bun run format`                    | Форматирование кода                                            |
+| `bun run test`                      | Тесты бекенда и фронтенда                                      |
+| `bun run test:backend`              | Только тесты бекенда                                           |
+| `bun run test:frontend`             | Только тесты фронтенда                                         |
+| `bun run build`                     | Сборка: для фронтенда `tsc -b` (проверка типов) и `vite build` |
+| `bun run --filter frontend codegen` | Генерация типов API фронтенда из `contract/openapi.yaml`       |
 
 Запуск одного теста — через скрипт пакета: `bun run test:frontend -- -t "Название теста"`.
 
@@ -140,17 +140,17 @@ bun run lint && bun run test
 
 ## Воркфлоу GitHub Actions
 
-| Воркфлоу | Файл | Событие | Модель | Назначение | Прогоны |
-|---|---|---|---|---|---|
-| CI | `ci.yml` | `push` (все ветки) | — | линтер, тесты, перегенерация контракта и типов/схем API, typecheck бэкенда, E2E | Actions → **CI** |
-| hexlet-check | `hexlet-check.yml` | `push` (все ветки и теги) | — | автотесты Хекслета (генерируется, не редактировать) | Actions → **hexlet-check** |
-| release-please | `release-please.yml` | `push` в `master` | — | release-PR, версия, `CHANGELOG.md`, теги | Actions → **release-please** |
-| OpenCode PR Review | `opencode-review.yml` | `pull_request` (`opened`, `synchronize`, `reopened`, `ready_for_review`; не от бота) | `opencode/mimo-v2.6-flash-free` | ревью PR агентом | Actions → **OpenCode PR Review** |
-| opencode | `opencode.yml` | `issue_comment` / `pull_request_review_comment` (`/oc`, `/opencode`; автор-мейнтейнер; не от бота) | `opencode/mimo-v2.6-flash-free` | задача агенту прямо из комментария | Actions → **opencode** |
-| Issue Triage | `opencode-triage.yml` | `issues` (`opened`; не от бота; аккаунт старше 30 дней) | `opencode/mimo-v2.6-flash-free` | триаж нового issue: метка + комментарий | Actions → **Issue Triage** |
-| Manual OpenCode Task | `opencode-manual.yml` | `workflow_dispatch` (вручную) | на выбор, по умолчанию `opencode/mimo-v2.6-flash-free` | произвольная задача агенту | Actions → **Manual OpenCode Task** → Run workflow |
-| Weekly Dependency Audit | `opencode-schedule-check-dependencies.yml` | `schedule` (пн 09:00 UTC) + `workflow_dispatch` | на выбор, по умолчанию `opencode/mimo-v2.6-flash-free` | аудит уязвимостей и устаревших зависимостей → issue | Actions → **Weekly Dependency Audit** |
-| Weekly TODO Audit | `opencode-schedule-check-todo.yml` | `schedule` (вт 09:00 UTC) | `opencode/mimo-v2.6-flash-free` | поиск `TODO`/`FIXME`/`HACK` → issue | Actions → **Weekly TODO Audit** |
+| Воркфлоу                | Файл                                       | Событие                                                                                            | Модель                                                 | Назначение                                                                      | Прогоны                                           |
+| ----------------------- | ------------------------------------------ | -------------------------------------------------------------------------------------------------- | ------------------------------------------------------ | ------------------------------------------------------------------------------- | ------------------------------------------------- |
+| CI                      | `ci.yml`                                   | `push` (все ветки)                                                                                 | —                                                      | линтер, тесты, перегенерация контракта и типов/схем API, typecheck бэкенда, E2E | Actions → **CI**                                  |
+| hexlet-check            | `hexlet-check.yml`                         | `push` (все ветки и теги)                                                                          | —                                                      | автотесты Хекслета (генерируется, не редактировать)                             | Actions → **hexlet-check**                        |
+| release-please          | `release-please.yml`                       | `push` в `master`                                                                                  | —                                                      | release-PR, версия, `CHANGELOG.md`, теги                                        | Actions → **release-please**                      |
+| OpenCode PR Review      | `opencode-review.yml`                      | `pull_request` (`opened`, `synchronize`, `reopened`, `ready_for_review`; не от бота)               | `opencode/mimo-v2.6-flash-free`                        | ревью PR агентом                                                                | Actions → **OpenCode PR Review**                  |
+| opencode                | `opencode.yml`                             | `issue_comment` / `pull_request_review_comment` (`/oc`, `/opencode`; автор-мейнтейнер; не от бота) | `opencode/mimo-v2.6-flash-free`                        | задача агенту прямо из комментария                                              | Actions → **opencode**                            |
+| Issue Triage            | `opencode-triage.yml`                      | `issues` (`opened`; не от бота; аккаунт старше 30 дней)                                            | `opencode/mimo-v2.6-flash-free`                        | триаж нового issue: метка + комментарий                                         | Actions → **Issue Triage**                        |
+| Manual OpenCode Task    | `opencode-manual.yml`                      | `workflow_dispatch` (вручную)                                                                      | на выбор, по умолчанию `opencode/mimo-v2.6-flash-free` | произвольная задача агенту                                                      | Actions → **Manual OpenCode Task** → Run workflow |
+| Weekly Dependency Audit | `opencode-schedule-check-dependencies.yml` | `schedule` (пн 09:00 UTC) + `workflow_dispatch`                                                    | на выбор, по умолчанию `opencode/mimo-v2.6-flash-free` | аудит уязвимостей и устаревших зависимостей → issue                             | Actions → **Weekly Dependency Audit**             |
+| Weekly TODO Audit       | `opencode-schedule-check-todo.yml`         | `schedule` (вт 09:00 UTC)                                                                          | `opencode/mimo-v2.6-flash-free`                        | поиск `TODO`/`FIXME`/`HACK` → issue                                             | Actions → **Weekly TODO Audit**                   |
 
 Прогоны смотрят на вкладке **Actions**: список слева фильтруется по имени воркфлоу; для ручных — кнопка **Run workflow** внутри самого воркфлоу.
 
@@ -166,6 +166,10 @@ bun run lint && bun run test
   по [семантическому версионированию](https://semver.org/lang/ru/), собирает
   `CHANGELOG.md` и держит release-PR открытым. Смержили release-PR — появляется
   тег `vX.Y.Z` и GitHub Release.
+
+## Коротка самооценка
+
+Почти все получилось с первого раза, только в коментарии к ПР агент создал комин не по конвенции, пришлось указать, первый раз исправить ему не удалось, исправил только со второго (все есть в пул реквесте)
 
 ---
 
